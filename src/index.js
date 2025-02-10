@@ -82,7 +82,7 @@ planetData.forEach((data, index) => {
     planetLabels.push({ label: label, planet: planet });
   });
 });
-
+console.log("appple pie")
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0x404040, 1);
 scene.add(ambientLight);

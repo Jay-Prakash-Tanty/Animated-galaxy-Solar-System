@@ -136,9 +136,9 @@ const generateGalaxy = () => {
   scene.add(boxex)
 
 
-  const mercuryGeo = new THREE.SphereGeometry( 0.1, 32, 16 ); 
+  const mercuryGeo = new THREE.SphereGeometry( 0.04, 32, 16 ); 
   const mercuryMat = new THREE.MeshBasicMaterial({
-    map: textureLoader.load(mercuryTexture)
+    map: textureLoader.load(sunTexture)
   })
   
   mercury = new THREE.Mesh(mercuryGeo,mercuryMat);
@@ -558,8 +558,8 @@ function checkRayIntersections(mousePointer, camera, raycaster, scene, getFirstV
     var heightHalf = canva.height/2 
     boxPosition.x = (boxPosition.x * widthHalf)+ widthHalf;
     boxPosition.y = -(boxPosition.y * heightHalf)+ heightHalf;
-    solor_click.style.top = `${toScreenPosition(mercury,camera).y*2-72}px`;
-    solor_click.style.left = `${toScreenPosition(mercury,camera).x*2-12}px`;
+    solor_click.style.top = `${toScreenPosition(mercury,camera).y*2-74}px`;
+    solor_click.style.left = `${toScreenPosition(mercury,camera).x*2-16}px`;
 
 
   }

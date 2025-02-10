@@ -26,6 +26,9 @@ body
     z-index: 3;
     position: absolute;
     top:0px;
+    font-family: "Orbitron";
+    color:white;
+
 
     /* cursor: none; */
     /* border: 3px #FFFFFF solid;
@@ -66,16 +69,18 @@ body
   --bbArrowSize: 1.5rem;
   --bbBorderRadius: 0.25rem;
   --bbPadding: 1rem;
-  background: var(--bbColor);
+  background: rgba(0,0,0,.7);
+  /* border:1.5px white solid; */
   border-radius: var(--bbBorderRadius);
   padding: var(--bbPadding);
+  
   position: relative;
 }
 
 [speech-bubble]::before{
   content: ''; 
   position: absolute;
-  background: var(--bbColor);
+  background: rgba(0,0,0,.7);
 }
 
 [speech-bubble][pbottom]{ margin-bottom: var(--bbArrowSize) }
