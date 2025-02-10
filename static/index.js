@@ -295,7 +295,7 @@ if (refresh===null){
     window.location.reload();
     window.localStorage.setItem('refresh', "1");
 }
-}, 1000); // 1500 milliseconds = 1.5 seconds
+}, 3000); // 1500 milliseconds = 1.5 seconds
 
 setTimeout(function() {
 localStorage.removeItem('refresh')
