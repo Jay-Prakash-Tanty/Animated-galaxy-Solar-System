@@ -48,12 +48,13 @@ const orbits = [];
 const planetLabels = [];
 let orbiting = true;
 
-let planetsLoaded = 0;
-
+var planetsLoaded = 0;
+console.log("mango")
 // Modify the planet creation code
 const planetPromises = planetData.map((data, index) => {
   return new Promise((resolve) => {
     console.log(`${index}how many times is this run`,`${planetsLoaded}`)
+    planetsLoaded++
     const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
     textureLoader.load(data.texture, (texture) => {
       const planetMaterial = new THREE.MeshPhongMaterial({ map: texture, shininess: 10 });
@@ -91,7 +92,7 @@ const planetPromises = planetData.map((data, index) => {
       planetLabels.push({ label: label, planet: planet });
 
       resolve();  // Resolve the promise once the planet is created and added to the scene
-      planetsLoaded++
+
     });
   });
 });
