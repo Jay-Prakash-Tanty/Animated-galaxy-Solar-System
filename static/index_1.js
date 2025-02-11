@@ -62,6 +62,7 @@ const planetPromises = planetData.map((data, index) => {
       planet.description = data.description;
       planet.orbiting = true;
       planet.angle = Math.random() * Math.PI * 2;
+      planet.number = index;
       scene.add(planet);
       planets.push(planet);
 
@@ -92,6 +93,7 @@ const planetPromises = planetData.map((data, index) => {
 
       resolve();  // Resolve the promise once the planet is created and added to the scene
       planetsLoaded++
+
     });
   });
 });
@@ -99,6 +101,7 @@ const planetPromises = planetData.map((data, index) => {
 // Wait for all promises to resolve before starting animation
 Promise.all(planetPromises).then(() => {
   animate();
+  console.log("how many times is this run")
 });
 
 // Lighting setup
@@ -296,6 +299,7 @@ function animate() {
   // Rotate planets around the sun based on their angle and distance
   if (orbiting) {
     planets.forEach((planet, index) => {
+      console.log(`Planets_array${JSON.stringify(planets[index])}`,`planet:${planet.name}`,`planet_index:${planet.number}`,`index:${index}`,"how many times is this loadededis my question??")
       planet.angle += 0.0001 * (index + 1);
       const distance = planetData[index].distance;
       planet.position.x = distance * Math.cos(planet.angle);
