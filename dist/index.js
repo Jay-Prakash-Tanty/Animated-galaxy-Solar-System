@@ -46,51 +46,51 @@ planetData.sort((a, b) => a.distance - b.distance);
 const planets = [];
 const orbits = [];
 const planetLabels = [];
-let orbiting = true;  
+let orbiting = true;
 
 let planetsLoaded = 0;
 
 // Modify the planet creation code
 const planetPromises = planetData.map((data, index) => {
   return new Promise((resolve) => {
-  const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
-  textureLoader.load(data.texture, (texture) => {
-    const planetMaterial = new THREE.MeshPhongMaterial({ map: texture, shininess: 10 });
-    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-    planet.name = data.name;
-    planet.description = data.description;  
-    planet.orbiting = true;
-    planet.angle = Math.random() * Math.PI * 2; 
-    scene.add(planet);
-    planets.push(planet);
+    const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
+    textureLoader.load(data.texture, (texture) => {
+      const planetMaterial = new THREE.MeshPhongMaterial({ map: texture, shininess: 10 });
+      const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+      planet.name = data.name;
+      planet.description = data.description;
+      planet.orbiting = true;
+      planet.angle = Math.random() * Math.PI * 2;
+      scene.add(planet);
+      planets.push(planet);
 
-    // Create orbit path for each planet
-    const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true });
-    const orbitPoints = [];
-    const numPoints = 100;
-    for (let i = 0; i < numPoints; i++) {
-      const angle = (i / numPoints) * Math.PI * 2;
-      orbitPoints.push(new THREE.Vector3(data.distance * Math.cos(angle), 0, data.distance * Math.sin(angle)));
-    }
-    const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
-    const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
-    scene.add(orbitLine);
-    orbits.push(orbitLine);
+      // Create orbit path for each planet
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true });
+      const orbitPoints = [];
+      const numPoints = 100;
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (i / numPoints) * Math.PI * 2;
+        orbitPoints.push(new THREE.Vector3(data.distance * Math.cos(angle), 0, data.distance * Math.sin(angle)));
+      }
+      const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+      const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+      scene.add(orbitLine);
+      orbits.push(orbitLine);
 
-          // Create clickable labels for each planet
-    const label = document.createElement('div');
-    label.className = 'planet-label';
-    label.innerHTML = data.name;
-    label.style.position = 'absolute';
-    label.style.color = 'white';
-    label.style.fontSize = '18px';
-    label.style.pointerEvents = 'none'; 
-    document.body.appendChild(label);
+      // Create clickable labels for each planet
+      const label = document.createElement('div');
+      label.className = 'planet-label';
+      label.innerHTML = data.name;
+      label.style.position = 'absolute';
+      label.style.color = 'white';
+      label.style.fontSize = '18px';
+      label.style.pointerEvents = 'none';
+      document.body.appendChild(label);
+      
+      planetLabels.push({ label: label, planet: planet });
 
-    planetLabels.push({ label: label, planet: planet });
-
-    resolve();  // Resolve the promise once the planet is created and added to the scene
-  });
+      resolve();  // Resolve the promise once the planet is created and added to the scene
+    });
   });
 });
 
@@ -98,7 +98,6 @@ const planetPromises = planetData.map((data, index) => {
 Promise.all(planetPromises).then(() => {
   animate();
 });
-
 
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0x404040, 1);
@@ -156,8 +155,8 @@ window.addEventListener('mousemove', (event) => {
   const intersects = getIntersectingPlanet();
   if (intersects.length > 0) {
     const planet = intersects[0].object;
-    const planetDataItem = planetData.find(p => p.name === planet.name); 
-    
+    const planetDataItem = planetData.find(p => p.name === planet.name);
+
     // Show the information box with planet details
     infoBox.style.display = 'block';
     infoBox.style.left = `${event.clientX + 10}px`;
@@ -181,11 +180,11 @@ window.addEventListener('click', (event) => {
   const intersects = getIntersectingPlanet();
   if (intersects.length > 0) {
     const planet = intersects[0].object;
-    const planetDataItem = planetData.find(p => p.name === planet.name); 
-    
+    const planetDataItem = planetData.find(p => p.name === planet.name);
+
     // Remove the infoBox
     infoBox.style.display = 'none';
-    
+
     // Redirect to the planet's HTML page
     window.location.href = `${planetDataItem.name.toLowerCase()}.html`;
   }
@@ -282,26 +281,11 @@ function moveCameraToY(newY) {
     } else {
       camera.position.y = newY;
     }
-  controls.update();
+    controls.update();
+  }
+
+  requestAnimationFrame(animateMove);
 }
-
-requestAnimationFrame(animateMove);
-}
-
-var refresh = window.localStorage.getItem('refresh');
-console.log(refresh);
-setTimeout(function() {
-if (refresh===null){
-    window.location.reload();
-    window.localStorage.setItem('refresh', "1");
-}
-}, 1000); // 1500 milliseconds = 1.5 seconds
-
-setTimeout(function() {
-localStorage.removeItem('refresh')
-}, 1700); // 1700 mill
-
-
 
 // Animation loop
 function animate() {
@@ -310,7 +294,7 @@ function animate() {
   // Rotate planets around the sun based on their angle and distance
   if (orbiting) {
     planets.forEach((planet, index) => {
-      planet.angle += 0.0001 * (index + 1); 
+      planet.angle += 0.0001 * (index + 1);
       const distance = planetData[index].distance;
       planet.position.x = distance * Math.cos(planet.angle);
       planet.position.z = distance * Math.sin(planet.angle);
@@ -329,3 +313,46 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
+
+// Create Rings around Saturn and Jupiter
+function createRing(planet, radius, innerRadius, outerRadius, texturePath) {
+  const ringGeometry = new THREE.RingGeometry(innerRadius, outerRadius, 64);
+  textureLoader.load(texturePath, (texture) => {
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.rotation.x = Math.PI / 2; // Align the ring horizontally
+    ring.position.set(planet.position.x, planet.position.y, planet.position.z);
+    scene.add(ring);
+  });
+}
+
+// Add rings to Saturn and Jupiter
+createRing(planets[5], 16, 14, 18, './saturn_ring.png'); // Saturn rings
+createRing(planets[4], 12, 10, 14, './jupiter_ring.png'); // Jupiter rings
+
+// Create the Asteroid Belt between Mars and Jupiter
+function createAsteroidBelt() {
+  const asteroidGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+  const asteroidMaterial = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+  const asteroidBelt = [];
+
+  for (let i = 0; i < 150; i++) { // Reduced the number of asteroids for a less crowded belt
+    const distance = Math.random() * (12 - 9) + 9; // Narrowed the asteroid belt width
+    const angle = Math.random() * Math.PI * 2;
+    const x = distance * Math.cos(angle);
+    const z = distance * Math.sin(angle);
+
+    const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+    asteroid.position.set(x, Math.random() * 2 - 1, z);
+    asteroidBelt.push(asteroid);
+    scene.add(asteroid);
+  }
+}
+
+// Create Asteroid Belt
+createAsteroidBelt();
