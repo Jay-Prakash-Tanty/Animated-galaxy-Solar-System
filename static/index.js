@@ -329,8 +329,8 @@ function animate() {
         distance = 30
       }
       
-      console.log(`planet:${planet.name}`,`planet_index:${planet.number}`,`index:${index}`,"how many times is this loadededis my question??")
-      console.log(`distance of planet::${distance}`)
+      // console.log(`planet:${planet.name}`,`planet_index:${planet.number}`,`index:${index}`,"how many times is this loadededis my question??")
+      // console.log(`distance of planet::${distance}`)
       planet.position.x = distance * Math.cos(planet.angle);
       planet.position.z = distance * Math.sin(planet.angle);
     });
