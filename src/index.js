@@ -40,49 +40,65 @@ const planetData = [
   { size: 0.6, distance: 30, texture: './pluto.jpg', name: "Pluto", description: "A dwarf planet located at the edge of the Solar System." },
 ];
 
+// Sort planetData based on distance to ensure they load in the correct order
+planetData.sort((a, b) => a.distance - b.distance);
+
 const planets = [];
 const orbits = [];
 const planetLabels = [];
-let orbiting = true;  
-planetData.forEach((data, index) => {
-  const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
-  textureLoader.load(data.texture, (texture) => {
-    const planetMaterial = new THREE.MeshPhongMaterial({ map: texture, shininess: 10 });
-    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-    planet.name = data.name;
-    planet.description = data.description;  
-    planet.orbiting = true;
-    planet.angle = Math.random() * Math.PI * 2; 
-    scene.add(planet);
-    planets.push(planet);
+let orbiting = true;
 
-    // Create orbit path for each planet
-    const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true });
-    const orbitPoints = [];
-    const numPoints = 100;
-    for (let i = 0; i < numPoints; i++) {
-      const angle = (i / numPoints) * Math.PI * 2;
-      orbitPoints.push(new THREE.Vector3(data.distance * Math.cos(angle), 0, data.distance * Math.sin(angle)));
-    }
-    const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
-    const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
-    scene.add(orbitLine);
-    orbits.push(orbitLine);
+let planetsLoaded = 0;
 
-    // Create clickable labels for each planet (using HTML div elements)
-    const label = document.createElement('div');
-    label.className = 'planet-label';
-    label.innerHTML = data.name;
-    label.style.position = 'absolute';
-    label.style.color = 'white';
-    label.style.fontSize = '18px';
-    label.style.pointerEvents = 'none'; 
-    document.body.appendChild(label);
+// Modify the planet creation code
+const planetPromises = planetData.map((data, index) => {
+  return new Promise((resolve) => {
+    const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
+    textureLoader.load(data.texture, (texture) => {
+      const planetMaterial = new THREE.MeshPhongMaterial({ map: texture, shininess: 10 });
+      const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+      planet.name = data.name;
+      planet.description = data.description;
+      planet.orbiting = true;
+      planet.angle = Math.random() * Math.PI * 2;
+      scene.add(planet);
+      planets.push(planet);
 
-    planetLabels.push({ label: label, planet: planet });
+      // Create orbit path for each planet
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true });
+      const orbitPoints = [];
+      const numPoints = 100;
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (i / numPoints) * Math.PI * 2;
+        orbitPoints.push(new THREE.Vector3(data.distance * Math.cos(angle), 0, data.distance * Math.sin(angle)));
+      }
+      const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+      const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+      scene.add(orbitLine);
+      orbits.push(orbitLine);
+
+      // Create clickable labels for each planet
+      const label = document.createElement('div');
+      label.className = 'planet-label';
+      label.innerHTML = data.name;
+      label.style.position = 'absolute';
+      label.style.color = 'white';
+      label.style.fontSize = '18px';
+      label.style.pointerEvents = 'none';
+      document.body.appendChild(label);
+      
+      planetLabels.push({ label: label, planet: planet });
+
+      resolve();  // Resolve the promise once the planet is created and added to the scene
+    });
   });
 });
-console.log("appple pie")
+
+// Wait for all promises to resolve before starting animation
+Promise.all(planetPromises).then(() => {
+  animate();
+});
+
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0x404040, 1);
 scene.add(ambientLight);
@@ -139,8 +155,8 @@ window.addEventListener('mousemove', (event) => {
   const intersects = getIntersectingPlanet();
   if (intersects.length > 0) {
     const planet = intersects[0].object;
-    const planetDataItem = planetData.find(p => p.name === planet.name); 
-    
+    const planetDataItem = planetData.find(p => p.name === planet.name);
+
     // Show the information box with planet details
     infoBox.style.display = 'block';
     infoBox.style.left = `${event.clientX + 10}px`;
@@ -154,7 +170,7 @@ window.addEventListener('mousemove', (event) => {
     infoBox.style.display = 'none';
   }
 });
-
+console.log("apppppppppppppppppppppppppppppppppppp")
 // Mouse click event listener for planet selection
 window.addEventListener('click', (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -164,13 +180,13 @@ window.addEventListener('click', (event) => {
   const intersects = getIntersectingPlanet();
   if (intersects.length > 0) {
     const planet = intersects[0].object;
-    const planetDataItem = planetData.find(p => p.name === planet.name); 
-    
+    const planetDataItem = planetData.find(p => p.name === planet.name);
+
     // Remove the infoBox
     infoBox.style.display = 'none';
-    
+
     // Redirect to the planet's HTML page
-    window.location.href = `${planetDataItem.name.toLowerCase()}.html`;
+    window.location.href = `${planetDataItem.name.toLowerCase()}`.html;
   }
 });
 
@@ -193,53 +209,83 @@ function generateStars() {
 // Call the generateStars function
 generateStars();
 
-// Custom "Move Camera Up" and "Move Camera Down" buttons
+// Custom "Move Camera Up" and "Move Camera Down" buttons with previous style
 const moveUpButton = document.createElement('button');
 moveUpButton.innerHTML = 'Move Camera Up';
 moveUpButton.style.position = 'absolute';
 moveUpButton.style.top = '10px';
 moveUpButton.style.left = '10px';
 moveUpButton.style.padding = '12px 20px';
-moveUpButton.style.backgroundColor = '#4CAF50';
+moveUpButton.style.backgroundColor = 'transparent';
 moveUpButton.style.color = 'white';
-moveUpButton.style.border = 'none';
-moveUpButton.style.borderRadius = '8px';
+moveUpButton.style.border = '1px solid white';
+moveUpButton.style.borderRadius = '0px';
 moveUpButton.style.cursor = 'pointer';
 moveUpButton.style.fontSize = '16px';
+moveUpButton.style.transition = 'background-color 0.3s ease';
 document.body.appendChild(moveUpButton);
 
 const moveDownButton = document.createElement('button');
 moveDownButton.innerHTML = 'Move Camera Down';
 moveDownButton.style.position = 'absolute';
-moveDownButton.style.top = '50px';
+moveDownButton.style.top = '60px';
 moveDownButton.style.left = '10px';
 moveDownButton.style.padding = '12px 20px';
-moveDownButton.style.backgroundColor = '#f44336';
+moveDownButton.style.backgroundColor = 'transparent';
 moveDownButton.style.color = 'white';
-moveDownButton.style.border = 'none';
-moveDownButton.style.borderRadius = '8px';
+moveDownButton.style.border = '1px solid white';
+moveDownButton.style.borderRadius = '0px';
 moveDownButton.style.cursor = 'pointer';
 moveDownButton.style.fontSize = '16px';
+moveDownButton.style.transition = 'background-color 0.3s ease';
 document.body.appendChild(moveDownButton);
+
+// Add hover animation to buttons
+moveUpButton.addEventListener('mouseover', () => {
+  moveUpButton.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+});
+
+moveUpButton.addEventListener('mouseout', () => {
+  moveUpButton.style.backgroundColor = 'transparent';
+});
+
+moveDownButton.addEventListener('mouseover', () => {
+  moveDownButton.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+});
+
+moveDownButton.addEventListener('mouseout', () => {
+  moveDownButton.style.backgroundColor = 'transparent';
+});
 
 // Camera move step
 let cameraY = camera.position.y;
 const cameraMoveStep = 5;
 
 // Button event listeners for moving the camera up and down
-moveUpButton.addEventListener('click', () => {
-  cameraY += cameraMoveStep;
-  camera.position.set(camera.position.x, cameraY, camera.position.z);
-  camera.lookAt(0, 0, 0);
-  controls.update();
-});
+moveUpButton.addEventListener('click', () => moveCameraToY(camera.position.y + cameraMoveStep));
+moveDownButton.addEventListener('click', () => moveCameraToY(camera.position.y - cameraMoveStep));
 
-moveDownButton.addEventListener('click', () => {
-  cameraY -= cameraMoveStep;
-  camera.position.set(camera.position.x, cameraY, camera.position.z);
-  camera.lookAt(0, 0, 0);
-  controls.update();
-});
+// Interpolating camera movement for smooth transition
+function moveCameraToY(newY) {
+  const duration = 500; // Duration in ms
+  const startY = camera.position.y;
+  const distance = newY - startY;
+  let startTime;
+
+  function animateMove(time) {
+    if (!startTime) startTime = time;
+    const progress = (time - startTime) / duration;
+    if (progress < 1) {
+      camera.position.y = startY + progress * distance;
+      requestAnimationFrame(animateMove);
+    } else {
+      camera.position.y = newY;
+    }
+    controls.update();
+  }
+
+  requestAnimationFrame(animateMove);
+}
 
 // Animation loop
 function animate() {
@@ -248,7 +294,7 @@ function animate() {
   // Rotate planets around the sun based on their angle and distance
   if (orbiting) {
     planets.forEach((planet, index) => {
-      planet.angle += 0.0001 * (index + 1); 
+      planet.angle += 0.0001 * (index + 1);
       const distance = planetData[index].distance;
       planet.position.x = distance * Math.cos(planet.angle);
       planet.position.z = distance * Math.sin(planet.angle);
@@ -268,4 +314,45 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-animate();
+// Create Rings around Saturn and Jupiter
+function createRing(planet, radius, innerRadius, outerRadius, texturePath) {
+  const ringGeometry = new THREE.RingGeometry(innerRadius, outerRadius, 64);
+  textureLoader.load(texturePath, (texture) => {
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.rotation.x = Math.PI / 2; // Align the ring horizontally
+    ring.position.set(planet.position.x, planet.position.y, planet.position.z);
+    scene.add(ring);
+  });
+}
+
+// Add rings to Saturn and Jupiter
+createRing(planets[5], 16, 14, 18, './saturn_ring.png'); // Saturn rings
+createRing(planets[4], 12, 10, 14, './jupiter_ring.png'); // Jupiter rings
+
+// Create the Asteroid Belt between Mars and Jupiter
+function createAsteroidBelt() {
+  const asteroidGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+  const asteroidMaterial = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+  const asteroidBelt = [];
+
+  for (let i = 0; i < 150; i++) { // Reduced the number of asteroids for a less crowded belt
+    const distance = Math.random() * (12 - 9) + 9; // Narrowed the asteroid belt width
+    const angle = Math.random() * Math.PI * 2;
+    const x = distance * Math.cos(angle);
+    const z = distance * Math.sin(angle);
+
+    const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+    asteroid.position.set(x, Math.random() * 2 - 1, z);
+    asteroidBelt.push(asteroid);
+    scene.add(asteroid);
+  }
+}
+
+// Create Asteroid Belt
+createAsteroidBelt();
