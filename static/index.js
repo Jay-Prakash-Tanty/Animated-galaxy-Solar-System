@@ -90,6 +90,7 @@ const planetPromises = planetData.map((data, index) => {
       planetLabels.push({ label: label, planet: planet });
 
       resolve();  // Resolve the promise once the planet is created and added to the scene
+      console.log(`${index}how many times is this run`)
     });
   });
 });
