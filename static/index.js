@@ -63,6 +63,7 @@ const planetPromises = planetData.map((data, index) => {
       planet.description = data.description;
       planet.orbiting = true;
       planet.angle = Math.random() * Math.PI * 2;
+      planet.number = index;
       scene.add(planet);
       planets.push(planet);
 
@@ -299,6 +300,8 @@ function animate() {
     planets.forEach((planet, index) => {
       planet.angle += 0.0001 * (index + 1);
       const distance = planetData[index].distance;
+      console.log(`planet:${planet.name}`,`planet_index:${planet.number}`,`index:${index}`,"how many times is this loadededis my question??")
+      console.log(`distance of planet::${distance}`)
       planet.position.x = distance * Math.cos(planet.angle);
       planet.position.z = distance * Math.sin(planet.angle);
     });
