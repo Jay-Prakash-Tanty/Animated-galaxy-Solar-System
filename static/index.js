@@ -299,7 +299,36 @@ function animate() {
   if (orbiting) {
     planets.forEach((planet, index) => {
       planet.angle += 0.0001 * (index + 1);
-      const distance = planetData[index].distance;
+      // const distance = planetData[index].distance;
+      let distance = 0
+      if( planet.number == 0){
+        distance = 3  
+      }
+      else if( planet.number == 1){
+        distance = 5  
+      }
+      else if( planet.number == 2){
+        distance = 7  
+      }
+      else if( planet.number == 3){
+        distance = 9 
+      }
+      else if( planet.number == 4){
+        distance = 12 
+      }
+      else if( planet.number == 5){
+        distance = 16 
+      }
+      else if( planet.number == 6){
+        distance = 20 
+      }
+      else if( planet.number == 7){
+        distance = 24  
+      }
+      else if( planet.number == 8){
+        distance = 30
+      }
+      
       console.log(`planet:${planet.name}`,`planet_index:${planet.number}`,`index:${index}`,"how many times is this loadededis my question??")
       console.log(`distance of planet::${distance}`)
       planet.position.x = distance * Math.cos(planet.angle);
