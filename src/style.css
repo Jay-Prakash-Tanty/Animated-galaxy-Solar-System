@@ -21,11 +21,38 @@ body
     outline: none;
 }
 
+.Restricted{
+  display: none;
+  width: 100%;
+  height: 100%;
+  font-weight: 300;
+  justify-content: center;
+  align-items: center;
+  margin-top:100px;
+  padding:30px;
+  font-family: "Orbitron";
+}
+
+@media only screen and (max-width:1023px) {
+  .webgl,#solarSystem{
+      display: none;
+  }  
+  body{
+    background: white;
+  }
+  .Restricted{
+      display: flex;
+  }
+}
+
 #solarSystem{
 
     z-index: 3;
     position: absolute;
     top:0px;
+    font-family: "Orbitron";
+    color:white;
+
 
     /* cursor: none; */
     /* border: 3px #FFFFFF solid;
@@ -66,16 +93,18 @@ body
   --bbArrowSize: 1.5rem;
   --bbBorderRadius: 0.25rem;
   --bbPadding: 1rem;
-  background: var(--bbColor);
+  background: rgba(0,0,0,.7);
+  /* border:1.5px white solid; */
   border-radius: var(--bbBorderRadius);
   padding: var(--bbPadding);
+  
   position: relative;
 }
 
 [speech-bubble]::before{
   content: ''; 
   position: absolute;
-  background: var(--bbColor);
+  background: rgba(0,0,0,.7);
 }
 
 [speech-bubble][pbottom]{ margin-bottom: var(--bbArrowSize) }
@@ -189,7 +218,7 @@ body
   box-sizing: border-box;
   cursor: default
 }
-body{
+/* body{
   max-width: 60rem;
   margin-inline: auto;
   font-family: sans-serif;
@@ -203,7 +232,7 @@ body{
   padding: 2rem;
   gap: 2rem;
   background: #141518;
-}
+} */
 
 .middle{
   grid-area: cc;

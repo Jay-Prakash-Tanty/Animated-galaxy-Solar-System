@@ -170,7 +170,7 @@ window.addEventListener('mousemove', (event) => {
     infoBox.style.display = 'none';
   }
 });
-
+console.log("apppppppppppppppppppppppppppppppppppp")
 // Mouse click event listener for planet selection
 window.addEventListener('click', (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -186,7 +186,7 @@ window.addEventListener('click', (event) => {
     infoBox.style.display = 'none';
 
     // Redirect to the planet's HTML page
-    window.location.href = `${planetDataItem.name.toLowerCase()}.html`;
+    window.location.href = `${planetDataItem.name.toLowerCase()}`.html;
   }
 });
 
