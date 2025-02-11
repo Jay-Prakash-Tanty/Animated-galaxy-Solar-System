@@ -53,7 +53,7 @@ console.log("mango")
 // Modify the planet creation code
 const planetPromises = planetData.map((data, index) => {
   return new Promise((resolve) => {
-    console.log(`${index}how many times is this run`,`${planetsLoaded}`)
+    console.log(`${index}how many times is this run`,`${planetsLoaded}`,`distance:${data.distance}`,`${data.name}`)
     planetsLoaded++
     const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
     textureLoader.load(data.texture, (texture) => {
